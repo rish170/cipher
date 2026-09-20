@@ -30,7 +30,8 @@ const TerminalWindow = ({ onPromptSubmit }) => {
     setMessages(prev => [...prev, { type: 'user', text: userPrompt }]);
 
     try {
-      const response = await fetch('http://localhost:3001/api/recommend', {
+      const backendUrl = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3001';
+      const response = await fetch(`${backendUrl}/api/recommend`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
