@@ -8,8 +8,17 @@ const TerminalWindow = ({ onPromptSubmit }) => {
   const [inputValue, setInputValue] = useState('');
   const [apiKey, setApiKey] = useState(sessionStorage.getItem('customApiKey') || '');
   const [showSettings, setShowSettings] = useState(false);
+  const [currentTime, setCurrentTime] = useState(new Date().toUTCString());
+  const [isFocused, setIsFocused] = useState(true);
   const feedRef = useRef(null);
   const inputRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date().toUTCString());
+    }, 1000);
+    return () => clearInterval(timer);
+  }, []);
 
   useEffect(() => {
     if (feedRef.current) {
@@ -128,7 +137,7 @@ const TerminalWindow = ({ onPromptSubmit }) => {
       <div className="terminal-header">
         <span>~/user ❯ cipher</span>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <span>{new Date().toUTCString()}</span>
+            <span>{currentTime}</span>
             <Settings size={16} className="settings-icon" onClick={() => setShowSettings(!showSettings)} />
         </div>
       </div>
@@ -168,11 +177,14 @@ const TerminalWindow = ({ onPromptSubmit }) => {
           ref={inputRef}
           type="text" 
           className="prompt-input"
+          style={{ caretColor: 'transparent' }}
           value={inputValue}
           onChange={handleInputChange}
+          onFocus={() => setIsFocused(true)}
+          onBlur={() => setIsFocused(false)}
           autoFocus
         />
-        <div className="cursor-block"></div>
+        {isFocused && <div className="cursor-block"></div>}
       </form>
     </div>
   );

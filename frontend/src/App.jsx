@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ParticleBackground from './ParticleBackground';
 import TerminalWindow from './TerminalWindow';
 import VirtualKeyboard from './VirtualKeyboard';
@@ -7,10 +7,26 @@ import './App.css';
 function App() {
   const [lastKeyPressed, setLastKeyPressed] = useState(null);
 
-  // We can pass the physical key press down if we wanted the keyboard 
-  // to insert characters, but standard input focus handles this better.
-  // The VirtualKeyboard mainly provides the sound and visual feedback, 
-  // and clicking it can trigger the onKeyPress.
+  useEffect(() => {
+    const handleFirstInteraction = () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log("Fullscreen request denied or not supported:", err);
+        });
+      }
+      // Remove listeners after first interaction
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('keydown', handleFirstInteraction);
+
+    return () => {
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('keydown', handleFirstInteraction);
+    };
+  }, []);
 
   const handleVirtualKeyPress = (key) => {
     // If we wanted to manually insert text into the input from the virtual keyboard,
@@ -25,9 +41,6 @@ function App() {
       
       <div className="tab-bar">
         <div className="tab active">MAIN SHELL</div>
-        <div className="tab">EMPTY</div>
-        <div className="tab">EMPTY</div>
-        <div className="tab">EMPTY</div>
       </div>
 
       <div className="main-content">
