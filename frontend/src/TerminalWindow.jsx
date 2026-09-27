@@ -36,6 +36,17 @@ const TerminalWindow = ({ onPromptSubmit }) => {
 
     const userPrompt = inputValue;
     setInputValue('');
+    
+    if (!apiKey.trim()) {
+      setMessages(prev => [
+        ...prev, 
+        { type: 'user', text: userPrompt },
+        { type: 'cipher', text: 'ERR: Please enter your Gemini API key in the settings (top right) to begin.' }
+      ]);
+      setShowSettings(true);
+      return;
+    }
+
     setMessages(prev => [...prev, { type: 'user', text: userPrompt }]);
 
     try {
@@ -144,7 +155,7 @@ const TerminalWindow = ({ onPromptSubmit }) => {
       
       {showSettings && (
         <div className="settings-panel">
-          <label style={{ fontSize: '0.8rem', color: 'var(--accent-amber)' }}>Session API Key (Optional)</label>
+          <label style={{ fontSize: '0.8rem', color: 'var(--accent-amber)' }}>Session API Key (Required)</label>
           <input 
             type="password" 
             placeholder="Paste Gemini API Key..." 
@@ -152,7 +163,7 @@ const TerminalWindow = ({ onPromptSubmit }) => {
             onChange={handleApiKeyChange}
           />
           <span style={{ fontSize: '0.7rem', color: 'var(--text-dim)' }}>
-            {apiKey ? 'Using your API key.' : 'Using default app key.'}
+            {apiKey ? 'API key set for this session.' : 'Requires your own API key to run.'}
           </span>
         </div>
       )}

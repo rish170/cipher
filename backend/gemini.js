@@ -24,10 +24,10 @@ For the 'structure' array, paths can include nesting using forward slashes (e.g.
 `;
 
 async function getRecommendation(idea, userApiKey) {
-    const apiKeyToUse = userApiKey || process.env.GEMINI_API_KEY_DEFAULT;
+    const apiKeyToUse = userApiKey;
     
     if (!apiKeyToUse) {
-        throw new Error("API key is missing. Please provide one or set GEMINI_API_KEY_DEFAULT.");
+        throw new Error("API key is missing. Please enter your Gemini API key in the settings.");
     }
 
     const genAI = new GoogleGenerativeAI(apiKeyToUse);
