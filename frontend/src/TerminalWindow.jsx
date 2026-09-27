@@ -96,6 +96,11 @@ const TerminalWindow = ({ onPromptSubmit }) => {
   const renderStructuredResponse = (data) => {
     return (
       <div className="structured-response">
+        {data.message && (
+          <div className="structured-section" style={{ borderTop: 'none', paddingTop: 0, paddingBottom: data.languages ? '10px' : '0' }}>
+            <span>{data.message}</span>
+          </div>
+        )}
         {data.languages && (
           <div className="structured-section">
             <span className="structured-label">Languages</span>
